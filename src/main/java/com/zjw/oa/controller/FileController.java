@@ -2,6 +2,7 @@ package com.zjw.oa.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.mysql.cj.util.StringUtils;
 import com.zjw.oa.entity.MyFile;
 import com.zjw.oa.util.JsonUtil;
@@ -179,6 +180,15 @@ public class FileController {
 
             }
         }*/
+    }
+
+    @RequestMapping(value = "/deleteFile")
+    @ResponseBody
+    @CrossOrigin
+    public JSONObject deleteFile(HttpServletRequest servletRequest){
+        JSONObject a = new JSONObject();
+        String id = servletRequest.getParameter("ggId");
+        return a;
     }
 
     public  static String convertFileSize(long size) {

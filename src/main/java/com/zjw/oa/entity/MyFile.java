@@ -18,6 +18,10 @@ public class MyFile {
         return fileLength;
     }
 
+    public Boolean deleteFile(){
+        return true;
+    }
+
     public void setFileLength(String fileLength) {
         this.fileLength = fileLength;
     }
