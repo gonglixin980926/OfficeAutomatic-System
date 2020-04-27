@@ -3,14 +3,14 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
+<!--				<el-form-item>-->
+<!--					<el-input v-model="filters.name" size="small" clearable='true' placeholder="任务名称"></el-input>-->
+<!--				</el-form-item>-->
+<!--				<el-form-item>-->
+<!--					<el-button type="primary" size="small" v-on:click="getUsers">查询</el-button>-->
+<!--				</el-form-item>-->
 				<el-form-item>
-					<el-input v-model="filters.name" size="small" clearable='true' placeholder="任务名称"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" size="small" v-on:click="getUsers">查询</el-button>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" size="small" @click="handleAdd">新增</el-button>
+					<el-button type="primary" size="big" @click="handleAdd">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -125,7 +125,17 @@
 <script>
 	import util from '../../common/js/util'
 	//import NProgress from 'nprogress'
-	import { getUserList , getUserListPage, removeUser, batchRemoveUser, editUser, addUser , getRw } from '../../api/api';
+	import {
+		getUserList,
+		getUserListPage,
+		removeUser,
+		batchRemoveUser,
+		batchRemoveRw,
+		editUser,
+		addUser,
+		getRw,
+		delRw
+	} from '../../api/api';
 
 	export default {
 		data() {
@@ -168,7 +178,6 @@
 				//新增界面数据
 				addForm: {
 					jsUserId: '',
-					name: '',
 					rwmc: '',
 					jjcd: 1,
 					rwTime: '',
@@ -178,6 +187,14 @@
 			}
 		},
 		methods: {
+
+			findUserName(userId){
+				let arr =  this.userData.filter((item)=>{
+						return item.userId === userId;
+				});
+				return arr[0].userName;
+			},
+
 			//性别显示转换
 			formatSex: function (row, column) {
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
@@ -204,8 +221,10 @@
 					rwmc: this.filters.name
 				};
 				this.listLoading = true;
+				console.log(this.listLoading);
 				//NProgress.start();
 				getRw(para).then((res) => {
+					console.log(res)
 					// this.total = res.data.total;
 					this.users = res;
 					this.listLoading = false;
@@ -219,8 +238,9 @@
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
-					let para = { id: row.id };
-					removeUser(para).then((res) => {
+					console.log(row)
+					let para = { id: row.rwId };
+					delRw(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
 						this.$message({
@@ -245,7 +265,6 @@
 				this.addFormVisible = true;
 				this.addForm = {
 					jsUserId: '',
-					name: '',
 					rwmc: '',
 					jjcd: '',
 					rwTime: '',
@@ -284,6 +303,11 @@
 							this.addLoading = true;
 							//NProgress.start();
 							let para = Object.assign({}, this.addForm);
+							let user = sessionStorage.getItem('user');
+							let userInfo = JSON.parse(user)
+							para["jsUserName"] = this.findUserName(para.jsUserId);
+							para["fbUserName"] = userInfo["userName"];
+							para["fbUserId"] = userInfo["userId"];
 							para.rwTime = (!para.rwTime || para.rwTime == '') ? '' : util.formatDate.format(new Date(para.rwTime), 'yyyy-MM-dd');
 							addUser(para).then((res) => {
 								this.addLoading = false;
@@ -295,6 +319,7 @@
 								this.$refs['addForm'].resetFields();
 								this.addFormVisible = false;
 								this.getUsers();
+								this.getUserData()
 							});
 						});
 					}
@@ -305,14 +330,15 @@
 			},
 			//批量删除
 			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
+				var ids = this.sels.map(item => item.rwId);
 				this.$confirm('确认删除选中记录吗？', '提示', {
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
 					//NProgress.start();
 					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
+					console.log(para);
+					batchRemoveRw(para).then((res) => {
 						this.listLoading = false;
 						//NProgress.done();
 						this.$message({
@@ -327,11 +353,9 @@
 			},
 			//获取接收人list
 			getUserData() {
-				var obj = {
-					userId: 123
-				}
-				getUserList(obj).then((res) => {
+				getUserList().then((res) => {
 					console.log(res,'res')
+					console.log("------")
 					this.userData = res.data
 				})
 			},
@@ -339,9 +363,9 @@
 		mounted() {
 			var user = sessionStorage.getItem('user');
 			user = JSON.parse(user)
-			user.permission=='1'?this.ifAdmin = true:this.ifAdmin = false
+			user.permission==1?this.ifAdmin = true:this.ifAdmin = false
 			this.getUsers();
-			this.getUserData()
+			this.getUserData();
 		}
 	}
 

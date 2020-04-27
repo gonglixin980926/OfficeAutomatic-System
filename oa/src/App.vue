@@ -18,8 +18,8 @@ export default {
 
 <style lang="scss">
 body {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	/*background: url(assets/bg1.jpg) center !important;
 		background-size: cover;*/
 	// background: #1F2D3D;

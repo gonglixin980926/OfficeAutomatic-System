@@ -1,6 +1,12 @@
 import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
+
+import {isManager} from './common/js/util'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 //import './assets/theme/theme-green/index.css'
@@ -14,6 +20,14 @@ import routes from './routes'
 // Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
 
+import 'animate.css'
+import de from "element-ui/src/locale/lang/de";
+
+
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -26,14 +40,19 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   //NProgress.start();
+  next()
   if (to.path == '/login') {
     sessionStorage.removeItem('user');
   }
   let user = JSON.parse(sessionStorage.getItem('user'));
   if (!user && to.path != '/login') {
-    next({ path: '/login' })
+    next({ path: '/login' });
   } else {
-    next()
+    next();
+    // if (to.path==='/userInfo' && user.permission ===3){
+    //   next({path:'/404'});
+    // }else{
+    // }
   }
 })
 

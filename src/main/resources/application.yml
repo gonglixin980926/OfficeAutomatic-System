@@ -9,6 +9,14 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
 #公共配置与profiles选择无关
-mybatis:
-  typeAliasesPackage: com.zjw.oa.entity
-  mapperLocations: classpath:mapper/*.xml
+#mybatis:
+#  typeAliasesPackage: com.zjw.oa.entity
+#  mapperLocations: classpath:mapper/*.xml
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+

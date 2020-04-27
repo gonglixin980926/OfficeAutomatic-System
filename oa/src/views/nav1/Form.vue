@@ -6,7 +6,7 @@
 			</el-form-item>
 		</el-form>
 		<el-table :data="tableData">
-			<el-table-column prop="userName" label="请假人" width="150"></el-table-column>
+			<el-table-column prop="qjUsersName" label="请假人" width="150"></el-table-column>
 			<el-table-column prop="qjyy" label="请假类型"></el-table-column>
 			<el-table-column prop="ksTime" label="请假开始时间" width="180"></el-table-column>
 			<el-table-column prop="jsTime" label="请假结束时间" width="180"></el-table-column>
@@ -15,11 +15,11 @@
 			<el-table-column label="操作" width="150" v-if="ifAdmin">
 				<template scope="scope">
 					<el-button type="success" size="small" :disabled="buttonAble(scope.row)" @click="handleAgree(scope.row,1)">同意</el-button>
-					<el-button type="danger" size="small" :disabled="buttonAble(scope.row)" @click="handleAgree(scope.row,0)">拒绝</el-button>
+					<el-button type="danger" size="small" :disabled="buttonAble(scope.row)" @click="handleAgree(scope.row,2)">拒绝</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
-		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal=false>
 			<el-form :model="addForm" label-width="100px" ref="addForm">
 				<el-form-item label="请假人" prop="UserName">
 					<el-input v-model="addForm.userName" readonly=true></el-input>
@@ -58,6 +58,7 @@ import { getQjList,agreeQj,addQj } from '../../api/api'
 	export default {
 		data() {
 			return {
+				user:JSON.parse(sessionStorage.getItem("user")),
 				tableData: [],
 				ifAdmin: true,
 				addFormVisible: false,
@@ -74,18 +75,20 @@ import { getQjList,agreeQj,addQj } from '../../api/api'
 		},
 		methods: {
 			handleAgree(row,value) {
-				console.log(row,value)
-				if(value==1) {
-					var params = {
-						qjId: row.qjId,
-						qjzt: '同意'
-					}
-				}else{
-					var params = {
-						qjId: row.qjId,
-						qjzt: '拒绝'
-					}
-				}
+				console.log(row);
+				var params = Object.assign({},row);
+				params.qjzt = value===1?'同意':'拒绝';
+				// if(value==1) {
+				// 	var params = {
+				// 		qjId: row.qjId,
+				// 		qjzt: '同意'
+				// 	}
+				// }else{
+				// 	var params = {
+				// 		qjId: row.qjId,
+				// 		qjzt: '拒绝'
+				// 	}
+				// }
 				agreeQj(params).then((res) => {
 					this.$message({
 						message: res.data.msg,
@@ -106,7 +109,7 @@ import { getQjList,agreeQj,addQj } from '../../api/api'
 				})
 			},
 			buttonAble(row) {
-				if(row.qjzt=='审批中') {
+				if(row.qjzt=='未审批') {
 					return false
 				} else {
 					return true
@@ -125,23 +128,24 @@ import { getQjList,agreeQj,addQj } from '../../api/api'
 				var user = sessionStorage.getItem('user');
 				user = JSON.parse(user)
 				var obj = {
-					userId: user.userId,
+					qjUserId: user.userId,
+					qjUsersName:user.userName,
 					qjyy: this.addForm.qjyy,
 					// ksTime: this.addForm.time[0].valueOf(),
 					ksTime: (!this.addForm.time[0] || this.addForm.time[0] == '') ? '' : util.formatDate.format(new Date(this.addForm.time[0]), 'yyyy-MM-dd'),
 					// jsTime: this.addForm.time[1].valueOf(),
 					jsTime: (!this.addForm.time[1] || this.addForm.time[1] == '') ? '' : util.formatDate.format(new Date(this.addForm.time[1]), 'yyyy-MM-dd'),
-					qjzt: '审批中',
+					qjzt: '未审批',
 					qjms: this.addForm.qjms
 				}
 				addQj(obj).then((res) => {
 					this.$message({
-						message: res.data.msg,
+						message: res.msg,
 						type: 'success'
-        	});
+        			});
+					this.addFormVisible = false
+					this.getTableData()
 				})
-				this.addFormVisible = false
-				this.getTableData()
 			}
 		}
 	}
