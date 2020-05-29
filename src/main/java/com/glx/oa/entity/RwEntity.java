@@ -10,12 +10,9 @@ public class RwEntity {
     private String rwmc;
     private String rwms;
     private Timestamp rwTime;
-    private Integer jsUserId;
-    private Integer fbUserId;
     private String jsUserName;
     private String fbUserName;
     private Integer jjcd;
-    private Integer isComplete;
     private String state;
 
     @Id
@@ -59,26 +56,6 @@ public class RwEntity {
     }
 
     @Basic
-    @Column(name = "jsUserId")
-    public Integer getJsUserId() {
-        return jsUserId;
-    }
-
-    public void setJsUserId(Integer jsUserId) {
-        this.jsUserId = jsUserId;
-    }
-
-    @Basic
-    @Column(name = "fbUserId")
-    public Integer getFbUserId() {
-        return fbUserId;
-    }
-
-    public void setFbUserId(Integer fbUserId) {
-        this.fbUserId = fbUserId;
-    }
-
-    @Basic
     @Column(name = "jsUserName")
     public String getJsUserName() {
         return jsUserName;
@@ -109,13 +86,13 @@ public class RwEntity {
     }
 
     @Basic
-    @Column(name = "isComplete")
-    public Integer getIsComplete() {
-        return isComplete;
+    @Column(name = "state")
+    public String getState() {
+        return state;
     }
 
-    public void setIsComplete(Integer isComplete) {
-        this.isComplete = isComplete;
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override
@@ -129,12 +106,10 @@ public class RwEntity {
         if (rwmc != null ? !rwmc.equals(rwEntity.rwmc) : rwEntity.rwmc != null) return false;
         if (rwms != null ? !rwms.equals(rwEntity.rwms) : rwEntity.rwms != null) return false;
         if (rwTime != null ? !rwTime.equals(rwEntity.rwTime) : rwEntity.rwTime != null) return false;
-        if (jsUserId != null ? !jsUserId.equals(rwEntity.jsUserId) : rwEntity.jsUserId != null) return false;
-        if (fbUserId != null ? !fbUserId.equals(rwEntity.fbUserId) : rwEntity.fbUserId != null) return false;
         if (jsUserName != null ? !jsUserName.equals(rwEntity.jsUserName) : rwEntity.jsUserName != null) return false;
         if (fbUserName != null ? !fbUserName.equals(rwEntity.fbUserName) : rwEntity.fbUserName != null) return false;
         if (jjcd != null ? !jjcd.equals(rwEntity.jjcd) : rwEntity.jjcd != null) return false;
-        if (isComplete != null ? !isComplete.equals(rwEntity.isComplete) : rwEntity.isComplete != null) return false;
+        if (state != null ? !state.equals(rwEntity.state) : rwEntity.state != null) return false;
 
         return true;
     }
@@ -145,22 +120,10 @@ public class RwEntity {
         result = 31 * result + (rwmc != null ? rwmc.hashCode() : 0);
         result = 31 * result + (rwms != null ? rwms.hashCode() : 0);
         result = 31 * result + (rwTime != null ? rwTime.hashCode() : 0);
-        result = 31 * result + (jsUserId != null ? jsUserId.hashCode() : 0);
-        result = 31 * result + (fbUserId != null ? fbUserId.hashCode() : 0);
         result = 31 * result + (jsUserName != null ? jsUserName.hashCode() : 0);
         result = 31 * result + (fbUserName != null ? fbUserName.hashCode() : 0);
         result = 31 * result + (jjcd != null ? jjcd.hashCode() : 0);
-        result = 31 * result + (isComplete != null ? isComplete.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "state")
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 }

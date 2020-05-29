@@ -48,17 +48,25 @@ public class UserController {
     @Transactional
     public JSONObject login(@RequestBody UserEntity user) {
         UserEntity user1 =this.userRepository.findUserEntityByUserName(user.getUserName());
-        JSONObject res;
-        if (user1.getPwd().equals(user.getPwd())&&user1.getPermission()==1){
-            res =  JSON.parseObject("{statusCode:200,user:{isAdmin:false,userName:\""+user1.getUserName()+"\"," +
-                    "zw:\"" + user1.getZw() + "\"," +
-                    "userId:\"" + user1.getUserId() + "\"," +
-                    "permission:" + user1.getPermission() + "}}");
+        JSONObject res = new JSONObject();
+        if (user1.getPwd().equals(user.getPwd())){
+
+            JSONObject userInfo = new JSONObject();
+            userInfo.put("isAdmin","false");
+            userInfo.put("userName",user1.getUserName());
+            userInfo.put("zw",user1.getZw());
+            userInfo.put("userId",user1.getUserId());
+            userInfo.put("permission",user1.getPermission());
+            res.put("user",userInfo);
+            res.put("loginStatus","success");
+//            res =  JSON.parseObject("{loginStatus:success,user:{isAdmin:false,userName:\""+user1.getUserName()+"\"," +
+//                    "zw:\"" + user1.getZw() + "\"," +
+//                    "userId:\"" + user1.getUserId() + "\"," +
+//                    "permission:" + user1.getPermission() + "}}");
         }else {
-            res =  JSON.parseObject("{statusCode:200,user:{isAdmin:false,userName:\""+user1.getUserName()+"\"," +
-                    "userId:\"" + user1.getUserId() + "\"," +
-                    "zw:\"" + user1.getZw() + "\"," +
-                    "permission:" + user1.getPermission() + "}}");
+            res.put("loginStatus","failed");
+            res.put("errMsg","用户名或密码错误");
+//            res =  JSON.parseObject("{loginStatus:failed,errMsg:'用户名或密码错误'}");
         }
         return res;
     }

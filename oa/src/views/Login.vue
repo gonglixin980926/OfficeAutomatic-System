@@ -59,14 +59,14 @@
             requestLogin(loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
-              let { statusCode, user } = data;
-              if (statusCode !== 200) {
+              let { loginStatus } = data;
+              if (loginStatus !== 'success') {
                 this.$message({
-                  message: '登陆失败',
+                  message: data.errMsg,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
+                sessionStorage.setItem('user', JSON.stringify(data.user));
                 this.$router.push({ path: '/notice' });
               }
             });

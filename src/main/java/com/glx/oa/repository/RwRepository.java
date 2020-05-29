@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RwRepository extends JpaRepository<RwEntity,Integer>{
-        List<RwEntity> findRwEntityByJsUserId(Integer id);
+        List<RwEntity> findRwEntityByJsUserName(String JsUserName);
 
         Integer deleteRwEntityByRwId(Integer id);
 

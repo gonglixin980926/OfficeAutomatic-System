@@ -26,7 +26,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-button type="danger" size="small" @click="batchRemoveItem()">批量删除</el-button>
+        <el-button type="danger" size="small"   v-if="isManager()" @click="batchRemoveItem()">批量删除</el-button>
     </div>
 
 </template>

@@ -2,13 +2,13 @@
     <el-form :model="addForm" label-width="100px" :rules="addForm" ref="addForm">
         <el-row>
             <el-col>
-                <el-form-item label="接收人" prop="jsUserName">
+                <el-form-item label="接收人" >
                     <el-select v-model="addForm.jsUserName">
                         <el-option
                                 v-for="item in userList"
                                 :key="item.userId"
                                 :label="item.userName"
-                                :value="item.userId">
+                                :value="item.userName">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -59,17 +59,19 @@
 </template>
 
 <script>
-    import {getRw,getUserList} from "../../api/api";
+    import {getRw,getUserList,addRw} from "../../api/api";
 
     export default {
         props:["applyDetails"],
         name: "newRw",
         data(){
             return{
+                userInfo : JSON.parse(sessionStorage.getItem("user")),
                 addForm:{},
                 userData:[],
                 userList:[],
                 endTime:'',
+                submit:{}
             }
         },
         mounted() {
@@ -99,6 +101,7 @@
                     jsUserId: user.userId,
                     // rwmc: this.filters.name
                 };
+                console.log(para)
                 this.listLoading = true;
                 //NProgress.start();
                 getRw(para).then((res) => {
@@ -110,18 +113,19 @@
                 });
             },
             onSubmit(){
-                this.submit["rwTime"] = this.endTime;
-                this.submit["isComplete"] = 2;
-                console.log(this.submit);
-                // jbSave(this.submit).then(res=>{
-                //     alert("保存成功")
-                // })
+                console.log(this.addForm)
+                this.addForm["fbUserName"] = this.userInfo.userName
+                this.addForm["rwTime"] = this.endTime;
+                this.addForm["state"] = "未完成";
+                console.log(this.addForm);
+                addRw(this.addForm).then(res=>{
+                    alert("保存成功")
+                })
             },
             //获取接收人list
             getUserList() {
                 getUserList().then((res) => {
                     console.log(res,'res')
-                    console.log("------")
                     this.userList = res.data
                 })
             },

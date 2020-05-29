@@ -18,6 +18,8 @@ export const delGg = params => {
 export const getJd = params => { return axios.post(`${base}/gsxx/xmjd`, params).then(res => res.data); };
 //我的任务
 export const getRw = params => { return axios.post(`${base}/rwxx/myRw`, params).then(res => res.data); };
+//添加任务
+// export const addRw = params => { return axios.post(`${base}/rwxx/myRw`, params).then(res => res.data); };
 
 //获取用户列表
 export const getUserList = () => { return axios.get(`${base}/user/userList`); };
@@ -53,7 +55,7 @@ export const batchRemoveRw = params => {
 //修改任务
 export const editUser = params => { return axios.get(`${base}/rwxx/updateRw`, { params: params }); };
 //新增任务
-export const addUser = params => {
+export const addRw = params => {
     console.log(params)
     return axios.post(`${base}/rwxx/addRw`, params);
 };

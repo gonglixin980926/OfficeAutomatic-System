@@ -54,8 +54,7 @@ public class RwController {
     @ResponseBody
     @CrossOrigin
     public JSONArray myRw(@RequestBody JSONObject rw) {
-        Integer id = Integer.parseInt((String) rw.get("jsUserId"));
-        List<RwEntity> list = this.rwRepository.findRwEntityByJsUserId(Integer.parseInt((String) rw.get("jsUserId")));
+        List<RwEntity> list = this.rwRepository.findRwEntityByJsUserName(rw.getString("jsUserName"));
         String jsonStr = JsonUtil.serializeDate(list);
         return JSON.parseArray(jsonStr);
     }
